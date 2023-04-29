@@ -1,0 +1,48 @@
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@SpringBootTest
+public class DescriptionTest {
+
+    private class TestDescriptionObject {
+        private String description;
+
+        public TestDescriptionObject(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
+
+    @Test
+    public void getDescriptionSuccess() {
+        TestDescriptionObject obj = new TestDescriptionObject("Sample description");
+        String expected = "Sample description";
+        assertEquals(expected, obj.getDescription());
+    }
+
+    @Test
+    public void getDescriptionFailure() {
+        TestDescriptionObject obj = new TestDescriptionObject("Sample description");
+        String incorrect = "Incorrect description";
+        assertNotEquals(incorrect, obj.getDescription());
+    }
+
+    @Test
+    public void getDescriptionSuccess_EmptyString() {
+        TestDescriptionObject obj = new TestDescriptionObject("");
+        String expected = "";
+        assertEquals(expected, obj.getDescription());
+    }
+
+    @Test
+    public void getDescriptionSuccess_Null() {
+        TestDescriptionObject obj = new TestDescriptionObject(null);
+        String expected = null;
+        assertEquals(expected, obj.getDescription());
+    }
+}

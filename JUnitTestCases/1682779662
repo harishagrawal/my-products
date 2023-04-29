@@ -1,0 +1,74 @@
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(SpringExtension.class)
+@DataJpaTest
+public class ProductRepositoryTest {
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Test
+    void testSaveProduct() {
+        Product product = new Product();
+        product.setName("Sample Product");
+        product.setDescription("Sample Product Description");
+        product.setPrice(12.99);
+
+        Product savedProduct = productRepository.save(product);
+        assertEquals(product.getName(), savedProduct.getName());
+        assertEquals(product.getDescription(), savedProduct.getDescription());
+        assertEquals(product.getPrice(), savedProduct.getPrice());
+    }
+
+    @Test
+    void testFindProductById() {
+        Product product = productRepository.save(getDummyProduct());
+        Optional<Product> foundProduct = productRepository.findById(product.getId());
+        assertTrue(foundProduct.isPresent());
+        assertEquals(product.getId(), foundProduct.get().getId());
+    }
+
+    @Test
+    void testProductNotFound() {
+        Optional<Product> foundProduct = productRepository.findById(-1L);
+        assertTrue(foundProduct.isEmpty());
+    }
+
+    @Test
+    void testCannotSaveProductWithEmptyName() {
+        Product product = new Product();
+        product.setName("");
+        product.setDescription("Sample Product Description");
+        product.setPrice(12.99);
+
+        assertThrows(Exception.class, () -> productRepository.save(product));
+    }
+
+    @Test
+    void testCannotSaveProductWithInvalidPrice() {
+        Product product = new Product();
+        product.setName("Sample Product");
+        product.setDescription("Sample Product Description");
+        product.setPrice(-1);
+
+        assertThrows(Exception.class, () -> productRepository.save(product));
+    }
+
+    private Product getDummyProduct() {
+        Product product = new Product();
+        product.setName("Dummy Product");
+        product.setDescription("Dummy Product Description");
+        product.setPrice(9.99);
+        return product;
+    }
+}

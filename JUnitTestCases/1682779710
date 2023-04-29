@@ -1,0 +1,76 @@
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+public class MyClassTest {
+
+    @Autowired
+    private MyClass myClass;
+
+    @Test
+    public void testSetId_Success() {
+        // Given
+        Long id = 1L;
+
+        // When
+        myClass.setId(id);
+
+        // Then
+        assertEquals(id, myClass.getId());
+    }
+
+    @Test
+    public void testSetId_Null() {
+        // Given
+        Long id = null;
+
+        // When
+        myClass.setId(id);
+
+        // Then
+        assertNull(myClass.getId());
+    }
+
+    @Test
+    public void testSetId_NegativeValue() {
+        // Given
+        Long id = -1L;
+
+        // When
+        myClass.setId(id);
+
+        // Then
+        assertEquals(id, myClass.getId());
+    }
+
+    @Test
+    public void testSetId_MaxValue() {
+        // Given
+        Long id = Long.MAX_VALUE;
+
+        // When
+        myClass.setId(id);
+
+        // Then
+        assertEquals(id, myClass.getId());
+    }
+
+    @Test
+    public void testSetId_MinValue() {
+        // Given
+        Long id = Long.MIN_VALUE;
+
+        // When
+        myClass.setId(id);
+
+        // Then
+        assertEquals(id, myClass.getId());
+    }
+}
+

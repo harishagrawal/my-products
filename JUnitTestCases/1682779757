@@ -1,0 +1,59 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+public class SampleTestClass {
+
+    private SampleClass sampleClass;
+
+    @BeforeEach
+    public void setUp() {
+        sampleClass = new SampleClass("John Doe");
+    }
+
+    @Test
+    public void testGetName_success() {
+        // Given
+        String expectedName = "John Doe";
+
+        // When
+        String actualName = sampleClass.getName();
+
+        // Then
+        assertNotNull(actualName, "Name should not be null");
+        assertEquals(expectedName, actualName, "Name should be equal to the expected value");
+    }
+
+    @Test
+    public void testGetName_failure() {
+        // Given
+        String unexpectedName = "Jane Doe";
+
+        // When
+        String actualName = sampleClass.getName();
+
+        // Then
+        assertNotNull(actualName, "Name should not be null");
+        assertNotEquals(unexpectedName, actualName, "Name should not be equal to the unexpected value");
+    }
+
+    // Create a class with the specified method for testing purposes
+    public static class SampleClass {
+        private final String name;
+
+        public SampleClass(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+}

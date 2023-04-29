@@ -1,0 +1,78 @@
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.autoconfigure.json.JsonTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.server.ResponseStatusException;
+
+@ExtendWith(SpringExtension.class)
+@JsonTest
+public class ItemTest {
+
+    private Item item;
+
+    @BeforeEach
+    public void setup() {
+        item = new Item();
+    }
+
+    @Test
+    public void setPrice_ValidPrice_ShouldSetPrice() {
+        double validPrice = 50.0;
+
+        item.setPrice(validPrice);
+
+        assertThat(item.getPrice()).isEqualTo(validPrice);
+    }
+
+    @Test
+    public void setPrice_NegativePrice_ShouldThrowException() {
+        double negativePrice = -50.0;
+
+        assertThrows(ResponseStatusException.class, () -> item.setPrice(negativePrice));
+    }
+
+    @Test
+    public void setPrice_ZeroPrice_ShouldThrowException() {
+        double zeroPrice = 0.0;
+
+        assertThrows(ResponseStatusException.class, () -> item.setPrice(zeroPrice));
+    }
+
+    @Test
+    public void setPrice_ExceedsMaxPrice_ShouldThrowException() {
+        double exceedsMaxPrice = Double.MAX_VALUE * 2;
+
+        assertThrows(ResponseStatusException.class, () -> item.setPrice(exceedsMaxPrice));
+    }
+
+    @Test
+    public void setPrice_MinPositivePrice_ShouldSetPrice() {
+        double minPositivePrice = Double.MIN_VALUE;
+
+        item.setPrice(minPositivePrice);
+
+        assertThat(item.getPrice()).isEqualTo(minPositivePrice);
+    }
+
+}
+
+class Item {
+
+    private double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        if (price <= 0 || price >= Double.MAX_VALUE) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid price value");
+        }
+        this.price = price;
+    }
+
+}

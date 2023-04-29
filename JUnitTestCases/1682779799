@@ -1,0 +1,53 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
+class PersonTest {
+
+    private Person person;
+
+    @BeforeEach
+    void setUp() {
+        person = new Person();
+    }
+
+    @Test
+    void testSetNameSuccess() {
+        String validName = "John Doe";
+        person.setName(validName);
+        assertEquals(validName, person.getName(), "Expected valid name to be set successfully");
+    }
+
+    @Test
+    void testSetNameWithNullName() {
+        assertThrows(IllegalArgumentException.class, () -> person.setName(null), "Expected null name to throw exception");
+    }
+
+    @Test
+    void testSetNameWithEmptyName() {
+        assertThrows(IllegalArgumentException.class, () -> person.setName(""), "Expected empty name to throw exception");
+    }
+
+    @Test
+    void testSetNameWithLongName() {
+        StringBuilder longName = new StringBuilder();
+        for (int i = 0; i < 1000; i++) {
+            longName.append("x");
+        }
+        assertThrows(IllegalArgumentException.class, () -> person.setName(longName.toString()), "Expected long name to throw exception");
+    }
+
+    @Test
+    void testSetNameWithNumericName() {
+        assertThrows(IllegalArgumentException.class, () -> person.setName("12345"), "Expected numeric name to throw exception");
+    }
+}
+
